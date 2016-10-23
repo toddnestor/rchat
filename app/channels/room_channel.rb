@@ -10,6 +10,6 @@ class RoomChannel < ApplicationCable::Channel
   def message(data)
     data['message'][:user_id] = current_user.id
     message = Message.create(data['message'])
-    ActionCable.server.broadcast "room_#{message.room_id}", message
+    ActionCable.server.broadcast "room_#{message.room_id}", {message: message, user: message.user}
   end
 end
