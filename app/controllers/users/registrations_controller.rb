@@ -1,5 +1,4 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :team_set, only: [:create]
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
   respond_to :json
@@ -11,6 +10,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    if params[:team]
+      team = Team.new(team_params)
+
+      unless team.save
+        render json: {errors: team.errors.full_messages}
+      end
+
+      params[:user][:team_id] = team.id
+    else
+      team_set
+      params[:user][:team_id] = @team.id
+    end
     super
   end
 

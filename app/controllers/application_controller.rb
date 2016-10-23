@@ -84,4 +84,8 @@ class ApplicationController < ActionController::Base
       )
     end
   end
+
+  def team_params
+    params.require(:team).permit(:name, :subdomain, :logo, meta: [])
+  end
 end

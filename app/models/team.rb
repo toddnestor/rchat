@@ -1,5 +1,6 @@
 class Team < ApplicationRecord
   validates :name, :subdomain, presence: true
+  validates :subdomain, uniqueness: true
 
   has_many :users
   has_many :meta, as: :metable
