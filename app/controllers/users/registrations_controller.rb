@@ -15,12 +15,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
       unless team.save
         render json: {errors: team.errors.full_messages}
+        return
       end
 
       params[:user][:team_id] = team.id
       super do |user|
         Role.create(team_id: team.id, user_id: user.id, admin: 'yes')
         render json: user
+        return
       end
     else
       team_set

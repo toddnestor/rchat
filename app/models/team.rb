@@ -17,7 +17,7 @@ class Team < ApplicationRecord
     ]
 
     rooms.each do |room|
-      Room.create(team_id: self.team_id, name: room)
+      Room.create(team_id: self.id, name: room)
     end
   end
 end
