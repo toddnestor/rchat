@@ -1,15 +1,16 @@
 import { connect } from 'react-redux';
-// import { addApple, addOrange, clearFruit } from '../actions';
+import { loadTeam } from '../actions';
 import RChat from './rchat';
 
 const mapStateToProps = state => ({
-  // fruits: state.fruits
+  loaded: state.loaded,
+  team: state.team,
+  current_user: state.current_user,
+  rooms: state.rooms
 });
 
 const mapDispatchToProps = dispatch => ({
-  // addApple: () => dispatch(addApple()),
-  // addOrange: () => dispatch(addOrange()),
-  // clearFruit: () => dispatch(clearFruit())
+  loadTeam: (team, rooms, user) => dispatch(loadTeam(team, rooms, user))
 });
 
 export default connect(

@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import store from './store';
 import RChatContainer from './components/rchat_container';
 
+window._ = require('lodash');
+
 const App = () => (
   <Provider store={store}>
     <RChatContainer />
