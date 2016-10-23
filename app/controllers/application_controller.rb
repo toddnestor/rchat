@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   before_filter :cors_preflight_check
   after_filter :cors_set_access_control_headers
@@ -73,15 +73,15 @@ class ApplicationController < ActionController::Base
   end
 
   def team_set
-    host = @_headers['HTTP_REFERER']
+    host = request.referer
     match = host.match(/^([a-z0-9\-\_]+)\.rchat\.[com|dev]{3}$/i)
 
-    unless match
+    @team = Team.find_by_subdomain(match[1]) if match
+
+    unless @team
       render(
           json: ["You must be logged into a team to perform that action"], status: :unprocessable_entity
       )
     end
-
-    @team = Team.find_by_subdomain(match[1])
   end
 end
