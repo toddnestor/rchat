@@ -5,6 +5,8 @@ Rails.application.configure do
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
+  config.web_console.whitelisted_ips = '1.2.3.1'
+  config.action_cable.allowed_request_origins = ['http://1.2.3.5:3000', 'http://test.rchat.dev:3000']
 
   # Do not eager load code on boot.
   config.eager_load = false

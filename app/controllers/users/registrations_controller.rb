@@ -18,11 +18,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
 
       params[:user][:team_id] = team.id
+      super do |user|
+        Role.create(team_id: team.id, user_id: user.id, admin: 'yes')
+        render json: user
+      end
     else
       team_set
       params[:user][:team_id] = @team.id
+      super
     end
-    super
   end
 
   # GET /resource/edit

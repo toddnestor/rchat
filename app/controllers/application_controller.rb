@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
     render json: model.all
   end
 
+  def home
+
+  end
+
   def create
     object = model.new(required_params)
     if object.save
@@ -74,7 +78,8 @@ class ApplicationController < ActionController::Base
 
   def team_set
     host = request.referer
-    match = host.match(/^([a-z0-9\-\_]+)\.rchat\.[com|dev]{3}$/i)
+    # https://regex101.com/r/61G9JS/1
+    match = host.match(/^(?:http(?:s)?\:\/\/)?([a-z0-9\-\_]+)\.rchat\.[com|dev]{3}(?:\:[0-9]{1,4})?(?:\/)?$/i)
 
     @team = Team.find_by_subdomain(match[1]) if match
 
