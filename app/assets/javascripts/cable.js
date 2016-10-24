@@ -11,7 +11,7 @@
   var schema = 'ws';
 
   if( location.host.indexOf('.dev') === -1 ) {
-    schema += 's';
+    // schema += 's';
   }
 
   App.cable = ActionCable.createConsumer( schema + '://' + location.host + '/cable');
