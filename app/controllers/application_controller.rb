@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
+  before_action :check_for_auth_token
 
   before_filter :cors_preflight_check
   after_filter :cors_set_access_control_headers
@@ -92,6 +93,17 @@ class ApplicationController < ActionController::Base
       render(
           json: ["You must be logged into a team to perform that action"], status: :unprocessable_entity
       )
+    end
+  end
+
+  def check_for_auth_token
+    if request.headers['Authorization']
+      auth_token = request.headers['Authorization'].split(' ')[1]
+      user = User.find_by_auth_token(auth_token)
+
+      if user
+        sign_in :user, user
+      end
     end
   end
 

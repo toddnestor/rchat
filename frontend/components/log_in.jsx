@@ -29,6 +29,7 @@ class LogIn extends React.Component {
       dataType: 'json',
       data: data,
       success: (response) => {
+        localStorage.setItem('user', JSON.stringify(response));
         this.props.signIn(response)
       },
       error: (xhr) => {

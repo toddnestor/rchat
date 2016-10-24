@@ -11,6 +11,7 @@ class User < ApplicationRecord
   validates_length_of    :password, :within => Devise.password_length, :allow_blank => true
 
   validates :username, :fname, :lname, :email, presence: true
+  after_initialize :ensure_auth_token
 
   belongs_to :team
   has_one :role
@@ -19,4 +20,13 @@ class User < ApplicationRecord
   has_many :rooms,
       through: :participants
   has_many :meta, as: :metable
+
+  def ensure_auth_token
+    unless self.auth_token
+      self.auth_token = SecureRandom::urlsafe_base64
+      self.save
+    end
+
+    self.auth_token
+  end
 end

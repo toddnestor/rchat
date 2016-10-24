@@ -68,6 +68,16 @@
 	
 	window._ = __webpack_require__(275);
 	
+	$.ajaxSetup({
+	  beforeSend: function beforeSend(xhr) {
+	    var user = localStorage.getItem('user');
+	
+	    if (user) user = JSON.parse(user);
+	
+	    if (user && user.auth_token) xhr.setRequestHeader("Authorization", "Basic " + user.auth_token);
+	  }
+	});
+	
 	var App = function App() {
 	  return _react2.default.createElement(
 	    _reactRedux.Provider,
@@ -23689,6 +23699,7 @@
 	        dataType: 'json',
 	        data: data,
 	        success: function success(response) {
+	          localStorage.setItem('user', JSON.stringify(response));
 	          _this2.props.signIn(response);
 	        },
 	        error: function error(xhr) {
