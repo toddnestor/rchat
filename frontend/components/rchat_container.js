@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadTeam, changeRoom, signIn, addMessage } from '../actions';
+import { loadTeam, changeRoom, signIn, addMessage, addRoom } from '../actions';
 import RChat from './rchat';
 
 const mapStateToProps = state => ({
@@ -14,7 +14,8 @@ const mapDispatchToProps = dispatch => ({
   loadTeam: (team, rooms, user) => dispatch(loadTeam(team, rooms, user)),
   changeRoom: (room) => dispatch(changeRoom(room)),
   signIn: (user) => dispatch(signIn(user)),
-  addMessage: (message) => dispatch(addMessage(message))
+  addMessage: (message) => dispatch(addMessage(message)),
+  addRoom: (room) => dispatch(addRoom(room))
 });
 
 export default connect(

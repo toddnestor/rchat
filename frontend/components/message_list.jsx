@@ -25,8 +25,6 @@ class MessageList extends React.Component {
           let message = data.message;
           message.user = data.user;
 
-          console.log('our new message: ', message);
-
           this.setState({
             messages: [
               ...this.state.messages,

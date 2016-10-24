@@ -23089,6 +23089,8 @@
 	
 	var _actions = __webpack_require__(198);
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	var _defaultState = {
 	  loaded: false,
 	  team: null,
@@ -23113,12 +23115,9 @@
 	    case _actions.SIGN_OUT:
 	      return _.merge({}, oldState, { current_user: null });
 	    case _actions.ADD_ROOM:
-	      rooms = _.merge({}, rooms);
+	      rooms = [].concat(_toConsumableArray(rooms), [action.room]);
 	
-	      rooms[action.room.id] = {
-	        name: action.room.name,
-	        messages: []
-	      };
+	      selected_room = action.room;
 	
 	      return {
 	        loaded: loaded,
@@ -23222,6 +23221,13 @@
 	    message: message
 	  };
 	};
+	
+	var addRoom = exports.addRoom = function addRoom(room) {
+	  return {
+	    type: ADD_ROOM,
+	    room: room
+	  };
+	};
 
 /***/ },
 /* 199 */
@@ -23266,6 +23272,9 @@
 	    },
 	    addMessage: function addMessage(message) {
 	      return dispatch((0, _actions.addMessage)(message));
+	    },
+	    addRoom: function addRoom(room) {
+	      return dispatch((0, _actions.addRoom)(room));
 	    }
 	  };
 	};
@@ -23344,12 +23353,13 @@
 	      var changeRoom = _props.changeRoom;
 	      var signIn = _props.signIn;
 	      var addMessage = _props.addMessage;
+	      var addRoom = _props.addRoom;
 	
 	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        loaded ? team ? _react2.default.createElement(_team2.default, { addMessage: addMessage, signIn: signIn, current_user: current_user, team: team, rooms: rooms, selected_room: selected_room, changeRoom: changeRoom }) : _react2.default.createElement(_create_team2.default, null) : 'Loading...'
+	        loaded ? team ? _react2.default.createElement(_team2.default, { addRoom: addRoom, addMessage: addMessage, signIn: signIn, current_user: current_user, team: team, rooms: rooms, selected_room: selected_room, changeRoom: changeRoom }) : _react2.default.createElement(_create_team2.default, null) : 'Loading...'
 	      );
 	    }
 	  }]);
@@ -23423,6 +23433,7 @@
 	      var selected_room = _props.selected_room;
 	      var changeRoom = _props.changeRoom;
 	      var addMessage = _props.addMessage;
+	      var addRoom = _props.addRoom;
 	
 	
 	      var SignedOutView = function SignedOutView() {
@@ -23480,7 +23491,7 @@
 	                null,
 	                'Rooms'
 	              ),
-	              _react2.default.createElement(_rooms2.default, { rooms: rooms, changeRoom: changeRoom, selected_room: selected_room })
+	              _react2.default.createElement(_rooms2.default, { rooms: rooms, addRoom: addRoom, changeRoom: changeRoom, selected_room: selected_room })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -23891,6 +23902,7 @@
 	    var _this = _possibleConstructorReturn(this, (Rooms.__proto__ || Object.getPrototypeOf(Rooms)).call(this, props));
 	
 	    _this.changeRoom = _this.changeRoom.bind(_this);
+	    _this.addNewRoom = _this.addNewRoom.bind(_this);
 	    _this.defaultRoom();
 	    return _this;
 	  }
@@ -23900,17 +23912,21 @@
 	    value: function defaultRoom() {
 	      var _this2 = this;
 	
-	      var room = this.props.rooms[Object.keys(this.props.rooms)[0]];
+	      if (!this.props.selected_room) {
+	        (function () {
+	          var room = _this2.props.rooms[Object.keys(_this2.props.rooms)[0]];
 	
-	      $.ajax({
-	        url: ajax_url + '/messages.json?room_id=' + room.id,
-	        method: 'GET',
-	        dataType: 'json',
-	        success: function success(messages) {
-	          room.messages = messages;
-	          _this2.props.changeRoom(room);
-	        }
-	      });
+	          $.ajax({
+	            url: ajax_url + '/messages.json?room_id=' + room.id,
+	            method: 'GET',
+	            dataType: 'json',
+	            success: function success(messages) {
+	              room.messages = messages;
+	              _this2.props.changeRoom(room);
+	            }
+	          });
+	        })();
+	      }
 	    }
 	  }, {
 	    key: 'changeRoom',
@@ -23932,9 +23948,40 @@
 	      });
 	    }
 	  }, {
+	    key: 'addNewRoom',
+	    value: function addNewRoom(e) {
+	      var _this4 = this;
+	
+	      if (e.keyCode === 13) {
+	        var data = {
+	          room: {
+	            name: $('#new-room-name').val()
+	          }
+	        };
+	
+	        $.ajax({
+	          url: ajax_url + '/rooms.json',
+	          method: 'POST',
+	          dataType: 'json',
+	          data: data,
+	          success: function success(response) {
+	            response.messages = [];
+	            _this4.props.addRoom(response);
+	            $('#new-room-name').val('');
+	          }
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'toggleRoom',
+	    value: function toggleRoom(e) {
+	      e.preventDefault();
+	      $('.add-room').toggle();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      var _props = this.props;
 	      var rooms = _props.rooms;
@@ -23951,11 +23998,31 @@
 	            { className: selected_room && selected_room.id == rooms[id].id ? 'active' : '', key: id },
 	            _react2.default.createElement(
 	              'a',
-	              { 'data-room': id, onClick: _this4.changeRoom, href: '#' },
+	              { 'data-room': id, onClick: _this5.changeRoom, href: '#' },
 	              rooms[id].name
 	            )
 	          );
-	        })
+	        }),
+	        _react2.default.createElement(
+	          'li',
+	          null,
+	          _react2.default.createElement(
+	            'a',
+	            { href: '#', onClick: this.toggleRoom },
+	            '+ Add Room'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'li',
+	          { className: 'add-room' },
+	          _react2.default.createElement('input', { type: 'text', onKeyUp: this.addNewRoom, className: 'form-control', id: 'new-room-name', placeholder: 'Room Name' }),
+	          ' ',
+	          _react2.default.createElement(
+	            'a',
+	            { onClick: this.toggleRoom, href: '#' },
+	            'cancel'
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -24140,8 +24207,6 @@
 	          received: function received(data) {
 	            var message = data.message;
 	            message.user = data.user;
-	
-	            console.log('our new message: ', message);
 	
 	            _this2.setState({
 	              messages: [].concat(_toConsumableArray(_this2.state.messages), [message])

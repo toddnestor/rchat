@@ -23,11 +23,11 @@ class RChat extends React.Component {
   }
 
   render() {
-    let { loaded, team, current_user, rooms, selected_room, changeRoom, signIn, addMessage } = this.props;
+    let { loaded, team, current_user, rooms, selected_room, changeRoom, signIn, addMessage, addRoom } = this.props;
 
     return (
       <div>
-        {loaded ? (team ? <Team addMessage={addMessage} signIn={signIn} current_user={current_user} team={team} rooms={rooms} selected_room={selected_room} changeRoom={changeRoom} /> : <CreateTeam />) : 'Loading...'}
+        {loaded ? (team ? <Team addRoom={addRoom} addMessage={addMessage} signIn={signIn} current_user={current_user} team={team} rooms={rooms} selected_room={selected_room} changeRoom={changeRoom} /> : <CreateTeam />) : 'Loading...'}
       </div>
     );
   }

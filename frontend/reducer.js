@@ -17,12 +17,12 @@ const reducer = (oldState = _defaultState, action) => {
     case SIGN_OUT:
       return _.merge({}, oldState, {current_user: null});
     case ADD_ROOM:
-      rooms = _.merge({}, rooms);
+      rooms = [
+        ...rooms,
+        action.room
+      ];
 
-      rooms[action.room.id] = {
-        name: action.room.name,
-        messages: []
-      };
+      selected_room = action.room;
 
       return {
         loaded,

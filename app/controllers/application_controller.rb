@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   def create
     object = model.new(required_params)
 
-    if model.column_names.include('team_id') && @team
+    if model.column_names.include?('team_id') && @team
       object.team_id = @team.id
     end
 

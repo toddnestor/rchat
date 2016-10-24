@@ -5,21 +5,24 @@ class Rooms extends React.Component {
     super(props);
 
     this.changeRoom = this.changeRoom.bind(this);
+    this.addNewRoom = this.addNewRoom.bind(this);
     this.defaultRoom();
   }
 
   defaultRoom() {
-    let room = this.props.rooms[Object.keys(this.props.rooms)[0]];
+    if(!this.props.selected_room) {
+      let room = this.props.rooms[Object.keys(this.props.rooms)[0]];
 
-    $.ajax({
-      url: ajax_url + '/messages.json?room_id=' + room.id,
-      method: 'GET',
-      dataType: 'json',
-      success: (messages) => {
-        room.messages = messages;
-        this.props.changeRoom(room);
-      }
-    });
+      $.ajax({
+        url: ajax_url + '/messages.json?room_id=' + room.id,
+        method: 'GET',
+        dataType: 'json',
+        success: (messages) => {
+          room.messages = messages;
+          this.props.changeRoom(room);
+        }
+      });
+    }
   }
 
   changeRoom(e) {
@@ -38,6 +41,33 @@ class Rooms extends React.Component {
     });
   }
 
+  addNewRoom(e) {
+    if(e.keyCode === 13 ) {
+      let data = {
+        room: {
+          name: $('#new-room-name').val()
+        }
+      };
+
+      $.ajax({
+        url: ajax_url + '/rooms.json',
+        method: 'POST',
+        dataType: 'json',
+        data: data,
+        success: (response) => {
+          response.messages = [];
+          this.props.addRoom(response);
+          $('#new-room-name').val('');
+        }
+      })
+    }
+  }
+
+  toggleRoom(e) {
+    e.preventDefault();
+    $('.add-room').toggle();
+  }
+
   render() {
     let {rooms, changeRoom, selected_room} = this.props;
 
@@ -50,6 +80,8 @@ class Rooms extends React.Component {
             </li>
           ))
         }
+        <li><a href="#" onClick={this.toggleRoom}>+ Add Room</a></li>
+        <li className="add-room"><input type="text" onKeyUp={this.addNewRoom} className="form-control" id="new-room-name" placeholder="Room Name" /> <a onClick={this.toggleRoom} href="#">cancel</a></li>
       </ul>
     );
   }
