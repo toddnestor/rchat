@@ -4,11 +4,12 @@ const _defaultState = {
   loaded: false,
   team: null,
   current_user: null,
-  rooms: {}
+  rooms: {},
+  selected_room: null
 }
 
 const reducer = (oldState = _defaultState, action) => {
-  let {loaded, team, current_user, rooms} = oldState;
+  let {loaded, team, current_user, rooms, selected_room} = oldState;
 
   switch(action.type) {
     case SIGN_IN:
@@ -27,7 +28,18 @@ const reducer = (oldState = _defaultState, action) => {
         loaded,
         team,
         current_user,
-        rooms
+        rooms,
+        selected_room
+      };
+    case CHANGE_ROOM:
+      selected_room = action.room;
+
+      return {
+        loaded,
+        team,
+        current_user,
+        rooms,
+        selected_room
       };
     case ADD_MESSAGE:
       rooms = _.merge({}, rooms);
@@ -37,7 +49,8 @@ const reducer = (oldState = _defaultState, action) => {
         loaded,
         team,
         current_user,
-        rooms
+        rooms,
+        selected_room
       };
     case LOAD_TEAM:
       team = action.team;
@@ -48,7 +61,8 @@ const reducer = (oldState = _defaultState, action) => {
         loaded: true,
         team,
         current_user,
-        rooms
+        rooms,
+        selected_room
       };
     default:
       return oldState;

@@ -11,15 +11,15 @@ class Team extends React.Component {
   }
 
   render() {
-    let { team, current_user, rooms } = this.props;
-
+    let { team, current_user, rooms, signIn } = this.props;
+//current_user={current_user} team={team} rooms={rooms} selected_room={selected_room} changeRoom={changeRoom}
     const SignedOutView = () => (
       <div className="row">
         <div className="col-md-6">
-          <LogIn />
+          <LogIn signIn={signIn}  />
         </div>
         <div className="col-md-6">
-          <SignUp />
+          <SignUp signIn={signIn} />
         </div>
       </div>
     );
@@ -37,7 +37,6 @@ class Team extends React.Component {
 
     return (
       <div>
-        Team
         {current_user ? <SignedInView /> : <SignedOutView />}
       </div>
     );

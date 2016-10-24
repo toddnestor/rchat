@@ -1,10 +1,11 @@
 import React from 'react';
 import Team from './team';
-import CreateTeam from './create_team'
+import CreateTeam from './create_team';
+import { Route } from 'react-router';
 
 class RChat extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {
@@ -22,11 +23,17 @@ class RChat extends React.Component {
   }
 
   render() {
-    let { loaded, team, current_user, rooms } = this.props;
+    let { loaded, team, current_user, rooms, selected_room, changeRoom, signIn } = this.props;
 
     return (
-      <div>
-        {loaded ? (team ? <Team current_user={current_user} team={team} rooms={rooms} /> : <CreateTeam />) : 'Loading...'}
+      <div className="container">
+        <div className="header clearfix">
+          <h3 className="text-muted">rChat{ team ? ' - ' + team.name : ''}</h3>
+        </div>
+        {loaded ? (team ? <Team signIn={signIn} current_user={current_user} team={team} rooms={rooms} selected_room={selected_room} changeRoom={changeRoom} /> : <CreateTeam />) : 'Loading...'}
+        <footer className="footer">
+          <p>&copy; 2016 rChat</p>
+        </footer>
       </div>
     );
   }

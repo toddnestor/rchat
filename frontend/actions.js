@@ -20,3 +20,8 @@ export const loadTeam = (team = null, rooms = [], current_user = null) => ({
   rooms,
   current_user
 });
+
+export const changeRoom = (room = null) => ({
+  type: CHANGE_ROOM,
+  room
+});
