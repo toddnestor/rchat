@@ -8,12 +8,12 @@
 (function() {
   this.App || (this.App = {});
 
-  var schema = 'ws';
+  var url = 'ws' + '://' + location.host + '/cable';
 
   if( location.host.indexOf('.dev') === -1 ) {
-    schema += 's';
+    url = 'wss://rrrchat.herokuapp.com'
   }
 
-  App.cable = ActionCable.createConsumer( schema + '://' + location.host + '/cable');
+  App.cable = ActionCable.createConsumer( url );
 
 }).call(this);
