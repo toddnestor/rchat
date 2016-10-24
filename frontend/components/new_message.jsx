@@ -7,20 +7,22 @@ class NewMessage extends React.Component {
     this.addMessage = this.addMessage.bind(this);
   }
 
-  addMessage(e) {
+  preventDefault(e) {
     e.preventDefault();
+  }
 
-    App.room.message($('#new-message').val());
+  addMessage(e) {
+    if( e.keyCode == 13 ) {
+      App.room.message($('#new-message').val());
+    }
   }
 
   render() {
 
     return (
-      <div>
-        New Message
-        <form onSubmit={this.addMessage}>
-          <textarea className="form-control" id="new-message"></textarea>
-          <button className="btn btn-success">Submit</button>
+      <div className="new-message-section">
+        <form onSubmit={this.preventDefault}>
+          <textarea onKeyUp={this.addMessage} className="form-control" id="new-message" placeholder={'Message #' + this.props.room_name}></textarea>
         </form>
       </div>
     );

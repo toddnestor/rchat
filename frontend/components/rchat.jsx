@@ -26,14 +26,8 @@ class RChat extends React.Component {
     let { loaded, team, current_user, rooms, selected_room, changeRoom, signIn, addMessage } = this.props;
 
     return (
-      <div className="container">
-        <div className="header clearfix">
-          <h3 className="text-muted">rChat{ team ? ' - ' + team.name : ''}</h3>
-        </div>
+      <div>
         {loaded ? (team ? <Team addMessage={addMessage} signIn={signIn} current_user={current_user} team={team} rooms={rooms} selected_room={selected_room} changeRoom={changeRoom} /> : <CreateTeam />) : 'Loading...'}
-        <footer className="footer">
-          <p>&copy; 2016 rChat</p>
-        </footer>
       </div>
     );
   }

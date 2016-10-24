@@ -11,10 +11,10 @@ class Room extends React.Component {
     let {addMessage, selected_room } = this.props;
 
     return (
-      <div>
-        <h3>{selected_room ? selected_room.name : 'Choose room'}</h3>
+      <div className="room">
+        <h3 className='room-title'>{selected_room ? selected_room.name : 'Choose room'}</h3>
         {selected_room ? <MessageList room_id={selected_room.id} messages={selected_room.messages} /> : ''}
-        {selected_room ? <NewMessage addMessage={addMessage} /> : ''}
+        {selected_room ? <NewMessage room_name={selected_room.name} addMessage={addMessage} /> : ''}
       </div>
     );
   }

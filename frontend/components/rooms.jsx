@@ -5,9 +5,26 @@ class Rooms extends React.Component {
     super(props);
 
     this.changeRoom = this.changeRoom.bind(this);
+    this.defaultRoom();
+  }
+
+  defaultRoom() {
+    let room = this.props.rooms[Object.keys(this.props.rooms)[0]];
+
+    $.ajax({
+      url: ajax_url + '/messages.json?room_id=' + room.id,
+      method: 'GET',
+      dataType: 'json',
+      success: (messages) => {
+        room.messages = messages;
+        this.props.changeRoom(room);
+      }
+    });
   }
 
   changeRoom(e) {
+    e.preventDefault();
+
     let room = this.props.rooms[$(e.currentTarget).data('room')];
 
     $.ajax({
@@ -22,18 +39,18 @@ class Rooms extends React.Component {
   }
 
   render() {
-    let {rooms, changeRoom} = this.props;
+    let {rooms, changeRoom, selected_room} = this.props;
+
     return (
-      <div>
-        Rooms
-        <ul>
-          {
-            Object.keys(rooms).map( id => (
-              <li key={id} data-room={id} onClick={this.changeRoom}>{rooms[id].name}</li>
-            ))
-          }
-        </ul>
-      </div>
+      <ul className="nav nav-sidebar">
+        {
+          Object.keys(rooms).map( id => (
+            <li className={selected_room && selected_room.id == rooms[id].id ? 'active' : ''} key={id}>
+              <a data-room={id} onClick={this.changeRoom} href="#">{rooms[id].name}</a>
+            </li>
+          ))
+        }
+      </ul>
     );
   }
 }

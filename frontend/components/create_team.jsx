@@ -38,43 +38,51 @@ class CreateTeam extends React.Component {
   render() {
 
     return (
-      <div className="create-team">
-        <h1>Create Team</h1>
-        <form onSubmit={this.createTeam}>
-          <div className="form-group">
-            <label htmlFor="teamName">Team Name</label>
-            <input type="text" className="form-control" id="teamName" placeholder="Team Name" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="subdomain">Subdomain</label>
-            <input type="text" className="form-control" id="subdomain" placeholder="Subdomain" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="fname">First Name</label>
-            <input type="text" className="form-control" id="fname" placeholder="First Name" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lname">Last Name</label>
-            <input type="text" className="form-control" id="lname" placeholder="Last Name" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input type="text" className="form-control" id="username" placeholder="Username" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">E-mail</label>
-            <input type="email" className="form-control" id="email" placeholder="E-mail" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input type="password" className="form-control" id="password" placeholder="Password" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password_confirmation">Confirm Password</label>
-            <input type="password" className="form-control" id="password_confirmation" placeholder="Confirm Password" />
-          </div>
-          <button type="submit" className="btn btn-success">Submit</button>
-        </form>
+      <div className="container">
+        <div className="header clearfix">
+          <h3 className="text-muted">rChat{ team ? ' - ' + team.name : ''}</h3>
+        </div>
+        <div className="create-team">
+          <h1>Create Team</h1>
+          <form onSubmit={this.createTeam}>
+            <div className="form-group">
+              <label htmlFor="teamName">Team Name</label>
+              <input type="text" className="form-control" id="teamName" placeholder="Team Name" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="subdomain">Subdomain</label>
+              <input type="text" className="form-control" id="subdomain" placeholder="Subdomain" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="fname">First Name</label>
+              <input type="text" className="form-control" id="fname" placeholder="First Name" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="lname">Last Name</label>
+              <input type="text" className="form-control" id="lname" placeholder="Last Name" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input type="text" className="form-control" id="username" placeholder="Username" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">E-mail</label>
+              <input type="email" className="form-control" id="email" placeholder="E-mail" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input type="password" className="form-control" id="password" placeholder="Password" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password_confirmation">Confirm Password</label>
+              <input type="password" className="form-control" id="password_confirmation" placeholder="Confirm Password" />
+            </div>
+            <button type="submit" className="btn btn-success">Submit</button>
+          </form>
+        </div>
+        <footer className="footer">
+          <p>&copy; 2016 rChat</p>
+        </footer>
       </div>
     );
   }
