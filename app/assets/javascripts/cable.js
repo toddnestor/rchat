@@ -7,12 +7,13 @@
 
 (function() {
   this.App || (this.App = {});
-  let schema = 'ws';
+
+  var schema = 'ws';
 
   if( location.host.indexOf('.dev') === -1 ) {
     schema += 's';
   }
 
-  App.cable = ActionCable.createConsumer(schema + '://' + location.host + '/cable');
+  App.cable = ActionCable.createConsumer( schema + '://' + location.host + '/cable');
 
 }).call(this);
