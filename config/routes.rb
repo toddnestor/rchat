@@ -11,5 +11,7 @@ Rails.application.routes.draw do
 
   resources :rooms, only: [:create, :update, :show, :delete, :index]
 
+  resources :messages, only: [:index]
+
   mount ActionCable.server => '/cable'
 end

@@ -25,3 +25,8 @@ export const changeRoom = (room = null) => ({
   type: CHANGE_ROOM,
   room
 });
+
+export const addMessage = (message) => ({
+  type: ADD_MESSAGE,
+  message
+});

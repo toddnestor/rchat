@@ -23347,6 +23347,13 @@
 	    room: room
 	  };
 	};
+	
+	var addMessage = exports.addMessage = function addMessage(message) {
+	  return {
+	    type: ADD_MESSAGE,
+	    message: message
+	  };
+	};
 
 /***/ },
 /* 203 */
@@ -23388,6 +23395,9 @@
 	    },
 	    signIn: function signIn(user) {
 	      return dispatch((0, _actions.signIn)(user));
+	    },
+	    addMessage: function addMessage(message) {
+	      return dispatch((0, _actions.addMessage)(message));
 	    }
 	  };
 	};
@@ -23465,6 +23475,7 @@
 	      var selected_room = _props.selected_room;
 	      var changeRoom = _props.changeRoom;
 	      var signIn = _props.signIn;
+	      var addMessage = _props.addMessage;
 	
 	
 	      return _react2.default.createElement(
@@ -23480,7 +23491,7 @@
 	            team ? ' - ' + team.name : ''
 	          )
 	        ),
-	        loaded ? team ? _react2.default.createElement(_team2.default, { signIn: signIn, current_user: current_user, team: team, rooms: rooms, selected_room: selected_room, changeRoom: changeRoom }) : _react2.default.createElement(_create_team2.default, null) : 'Loading...',
+	        loaded ? team ? _react2.default.createElement(_team2.default, { addMessage: addMessage, signIn: signIn, current_user: current_user, team: team, rooms: rooms, selected_room: selected_room, changeRoom: changeRoom }) : _react2.default.createElement(_create_team2.default, null) : 'Loading...',
 	        _react2.default.createElement(
 	          'footer',
 	          { className: 'footer' },
@@ -23560,7 +23571,10 @@
 	      var current_user = _props.current_user;
 	      var rooms = _props.rooms;
 	      var signIn = _props.signIn;
-	      //current_user={current_user} team={team} rooms={rooms} selected_room={selected_room} changeRoom={changeRoom}
+	      var selected_room = _props.selected_room;
+	      var changeRoom = _props.changeRoom;
+	      var addMessage = _props.addMessage;
+	
 	
 	      var SignedOutView = function SignedOutView() {
 	        return _react2.default.createElement(
@@ -23586,12 +23600,12 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col-md-3' },
-	            _react2.default.createElement(_rooms2.default, null)
+	            _react2.default.createElement(_rooms2.default, { rooms: rooms, changeRoom: changeRoom })
 	          ),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col-md-6' },
-	            _react2.default.createElement(_room2.default, null)
+	            _react2.default.createElement(_room2.default, { selected_room: selected_room, addMessage: addMessage })
 	          )
 	        );
 	      };
@@ -23953,17 +23967,53 @@
 	  function Rooms(props) {
 	    _classCallCheck(this, Rooms);
 	
-	    return _possibleConstructorReturn(this, (Rooms.__proto__ || Object.getPrototypeOf(Rooms)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Rooms.__proto__ || Object.getPrototypeOf(Rooms)).call(this, props));
+	
+	    _this.changeRoom = _this.changeRoom.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(Rooms, [{
+	    key: 'changeRoom',
+	    value: function changeRoom(e) {
+	      var _this2 = this;
+	
+	      var room = this.props.rooms[$(e.currentTarget).data('room')];
+	
+	      $.ajax({
+	        url: 'messages.json?room_id=' + room.id,
+	        method: 'GET',
+	        dataType: 'json',
+	        success: function success(messages) {
+	          room.messages = messages;
+	          _this2.props.changeRoom(room);
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this3 = this;
+	
+	      var _props = this.props;
+	      var rooms = _props.rooms;
+	      var changeRoom = _props.changeRoom;
 	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Rooms'
+	        'Rooms',
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          Object.keys(rooms).map(function (id) {
+	            return _react2.default.createElement(
+	              'li',
+	              { key: id, 'data-room': id, onClick: _this3.changeRoom },
+	              rooms[id].name
+	            );
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -24039,6 +24089,14 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _message_list = __webpack_require__(277);
+	
+	var _message_list2 = _interopRequireDefault(_message_list);
+	
+	var _new_message = __webpack_require__(278);
+	
+	var _new_message2 = _interopRequireDefault(_new_message);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24059,11 +24117,21 @@
 	  _createClass(Room, [{
 	    key: 'render',
 	    value: function render() {
+	      var _props = this.props;
+	      var addMessage = _props.addMessage;
+	      var selected_room = _props.selected_room;
+	
 	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Room'
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          selected_room ? selected_room.name : 'Choose room'
+	        ),
+	        selected_room ? _react2.default.createElement(_message_list2.default, { room_id: selected_room.id, messages: selected_room.messages }) : '',
+	        selected_room ? _react2.default.createElement(_new_message2.default, { addMessage: addMessage }) : ''
 	      );
 	    }
 	  }]);
@@ -46927,6 +46995,167 @@
 	};
 	
 	exports.default = Errors;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var MessageList = function (_React$Component) {
+	  _inherits(MessageList, _React$Component);
+	
+	  function MessageList(props) {
+	    _classCallCheck(this, MessageList);
+	
+	    var _this = _possibleConstructorReturn(this, (MessageList.__proto__ || Object.getPrototypeOf(MessageList)).call(this, props));
+	
+	    _this.state = { messages: _this.props.messages };
+	    return _this;
+	  }
+	
+	  _createClass(MessageList, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      var that = this;
+	
+	      App.room = App.cable.subscriptions.create({ channel: "RoomChannel", room_id: this.props.room_id }, {
+	        connected: function connected() {},
+	        disconnected: function disconnected() {},
+	        received: function received(data) {
+	          var message = data.message;
+	          message.user = data.user;
+	
+	          console.log('our new message: ', message);
+	
+	          _this2.setState({ messages: [].concat(_toConsumableArray(_this2.state.messages), [message]) });
+	          $('#new-message').val('');
+	        },
+	        message: function message(_message) {
+	          return this.perform('message', {
+	            message: {
+	              text: _message,
+	              room_id: that.props.room_id
+	            }
+	          });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'ul',
+	        null,
+	        this.state.messages.map(function (message) {
+	          return _react2.default.createElement(
+	            'li',
+	            { key: message.id },
+	            message.text,
+	            ' - ',
+	            message.user.username
+	          );
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return MessageList;
+	}(_react2.default.Component);
+	
+	exports.default = MessageList;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var NewMessage = function (_React$Component) {
+	  _inherits(NewMessage, _React$Component);
+	
+	  function NewMessage(props) {
+	    _classCallCheck(this, NewMessage);
+	
+	    var _this = _possibleConstructorReturn(this, (NewMessage.__proto__ || Object.getPrototypeOf(NewMessage)).call(this, props));
+	
+	    _this.addMessage = _this.addMessage.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(NewMessage, [{
+	    key: 'addMessage',
+	    value: function addMessage(e) {
+	      e.preventDefault();
+	
+	      App.room.message($('#new-message').val());
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        'New Message',
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.addMessage },
+	          _react2.default.createElement('textarea', { className: 'form-control', id: 'new-message' }),
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn btn-success' },
+	            'Submit'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return NewMessage;
+	}(_react2.default.Component);
+	
+	exports.default = NewMessage;
 
 /***/ }
 /******/ ]);
