@@ -24,7 +24,7 @@ class LogIn extends React.Component {
     }
 
     $.ajax({
-      url: '/users/sign_in.json',
+      url: ajax_url + '/users/sign_in.json',
       method: 'POST',
       dataType: 'json',
       data: data,

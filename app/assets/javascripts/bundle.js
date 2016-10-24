@@ -23453,7 +23453,7 @@
 	      var _this2 = this;
 	
 	      $.ajax({
-	        url: '/team.json',
+	        url: ajax_url + '/team.json',
 	        method: 'GET',
 	        dataType: 'json',
 	        success: function success(response) {
@@ -23684,7 +23684,7 @@
 	      };
 	
 	      $.ajax({
-	        url: '/users/sign_in.json',
+	        url: ajax_url + '/users/sign_in.json',
 	        method: 'POST',
 	        dataType: 'json',
 	        data: data,
@@ -23824,7 +23824,7 @@
 	      };
 	
 	      $.ajax({
-	        url: '/users.json',
+	        url: ajax_url + '/users.json',
 	        method: 'POST',
 	        dataType: 'json',
 	        data: data,
@@ -23981,7 +23981,7 @@
 	      var room = this.props.rooms[$(e.currentTarget).data('room')];
 	
 	      $.ajax({
-	        url: 'messages.json?room_id=' + room.id,
+	        url: ajax_url + '/messages.json?room_id=' + room.id,
 	        method: 'GET',
 	        dataType: 'json',
 	        success: function success(messages) {
@@ -24197,7 +24197,7 @@
 	      };
 	
 	      $.ajax({
-	        url: '/users.json',
+	        url: ajax_url + '/users.json',
 	        method: 'POST',
 	        data: data,
 	        dataType: 'json',

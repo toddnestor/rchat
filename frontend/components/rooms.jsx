@@ -11,7 +11,7 @@ class Rooms extends React.Component {
     let room = this.props.rooms[$(e.currentTarget).data('room')];
 
     $.ajax({
-      url: 'messages.json?room_id=' + room.id,
+      url: ajax_url + '/messages.json?room_id=' + room.id,
       method: 'GET',
       dataType: 'json',
       success: (messages) => {

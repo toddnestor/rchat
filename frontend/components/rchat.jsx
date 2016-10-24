@@ -10,7 +10,7 @@ class RChat extends React.Component {
 
   componentDidMount() {
     $.ajax({
-      url: '/team.json',
+      url: ajax_url + '/team.json',
       method: 'GET',
       dataType: 'json',
       success: (response) => {

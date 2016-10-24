@@ -28,7 +28,7 @@ class SignUp extends React.Component {
     }
 
     $.ajax({
-      url: '/users.json',
+      url: ajax_url + '/users.json',
       method: 'POST',
       dataType: 'json',
       data: data,

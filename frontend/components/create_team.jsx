@@ -25,7 +25,7 @@ class CreateTeam extends React.Component {
     }
 
     $.ajax({
-      url: '/users.json',
+      url: ajax_url + '/users.json',
       method: 'POST',
       data: data,
       dataType: 'json',
