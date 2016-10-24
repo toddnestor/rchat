@@ -47052,27 +47052,35 @@
 	
 	      var that = this;
 	
-	      App.room = App.cable.subscriptions.create({ channel: "RoomChannel", room_id: this.props.room_id }, {
-	        connected: function connected() {},
-	        disconnected: function disconnected() {},
-	        received: function received(data) {
-	          var message = data.message;
-	          message.user = data.user;
+	      var user = localStorage.getItem('user');
 	
-	          console.log('our new message: ', message);
+	      if (user) user = JSON.parse(user);
 	
-	          _this2.setState({ messages: [].concat(_toConsumableArray(_this2.state.messages), [message]) });
-	          $('#new-message').val('');
-	        },
-	        message: function message(_message) {
-	          return this.perform('message', {
-	            message: {
-	              text: _message,
-	              room_id: that.props.room_id
-	            }
-	          });
-	        }
-	      });
+	      if (user && user.auth_token) {
+	        App.room = App.cable.subscriptions.create({ channel: "RoomChannel", room_id: this.props.room_id, auth_token: user.auth_token }, {
+	          connected: function connected() {},
+	          disconnected: function disconnected() {},
+	          received: function received(data) {
+	            var message = data.message;
+	            message.user = data.user;
+	
+	            console.log('our new message: ', message);
+	
+	            _this2.setState({
+	              messages: [].concat(_toConsumableArray(_this2.state.messages), [message])
+	            });
+	            $('#new-message').val('');
+	          },
+	          message: function message(_message) {
+	            return this.perform('message', {
+	              message: {
+	                text: _message,
+	                room_id: that.props.room_id
+	              }
+	            });
+	          }
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'render',

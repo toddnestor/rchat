@@ -9,30 +9,41 @@ class MessageList extends React.Component {
   componentDidMount() {
     let that = this;
 
-    App.room = App.cable.subscriptions.create({channel: "RoomChannel", room_id: this.props.room_id }, {
-       connected: function() {},
-       disconnected: function() {},
-       received: (data) => {
-         let message = data.message;
-         message.user = data.user;
+    let user = localStorage.getItem('user');
 
-         console.log('our new message: ', message);
+    if( user )
+      user = JSON.parse( user );
 
-         this.setState({messages: [
-           ...this.state.messages,
-           message
-         ]});
-         $('#new-message').val('');
-       },
-       message: function(message) {
-         return this.perform('message', {
-           message: {
-             text: message,
-             room_id: that.props.room_id
-           }
-         });
-       }
-     });
+    if( user && user.auth_token ) {
+      App.room = App.cable.subscriptions.create({channel: "RoomChannel", room_id: this.props.room_id, auth_token: user.auth_token}, {
+        connected: function () {
+        },
+        disconnected: function () {
+        },
+        received: (data) => {
+          let message = data.message;
+          message.user = data.user;
+
+          console.log('our new message: ', message);
+
+          this.setState({
+            messages: [
+              ...this.state.messages,
+              message
+            ]
+          });
+          $('#new-message').val('');
+        },
+        message: function (message) {
+          return this.perform('message', {
+            message: {
+              text: message,
+              room_id: that.props.room_id
+            }
+          });
+        }
+      });
+    }
   }
 
   render() {
