@@ -11,7 +11,7 @@
   var url = 'ws' + '://' + location.host + '/cable';
 
   if( location.host.indexOf('.dev') === -1 ) {
-    url = 'wss://rrrchat.herokuapp.com'
+    url = 'wss://rrrchat.herokuapp.com/cable'
   }
 
   App.cable = ActionCable.createConsumer( url );
